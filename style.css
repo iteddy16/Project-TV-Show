@@ -1,3 +1,60 @@
 #root {
-  color: red;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+body {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans';
+  margin: 0;
+  line-height: 1.8cap;
+  text-align: justify;
+  background-color: ;
+  background-color: #f7f7f7;
+  color: #333;
+}
+
+.episode-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.episode-title {
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  padding: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  border: 5px solid #ccc;
+}
+
+.episode-card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.episode-card p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.episode-card a {
+  color: #0066cc;
+  text-decoration: none;
+  font-size: 13px;
+  margin-top: auto;
+  padding: 10px;
+  text-align: left;
 }
