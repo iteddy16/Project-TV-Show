@@ -3,9 +3,25 @@
 function setup() {
   const allEpisodes = getAllEpisodes();
   makePageForEpisodes(allEpisodes);
+
+  const input = document.getElementById("q");
+  input.addEventListener("input", function() {
+    const searchTerm= input.value.toLowerCase();
+  
+  
+    const filteredEpisodes= allEpisodes.filter(function(episode){
+      const name= episode.name.toLowerCase();
+      const summary= episode.summary.toLowerCase();
+
+return name.includes(searchTerm) || summary.includes(searchTerm);
+    });
+
+    makePageForEpisodes(filteredEpisodes);
+  });
 }
 
-function makePageForEpisodes(episodesList) {
+function makePageForEpisodes(episodesList){
+
   const rootElem = document.getElementById("root");
 //const episodeCountElem = document.getElementById("episodeCount");
 
