@@ -4,37 +4,43 @@ function setup() {
   const allEpisodes = getAllEpisodes();
   makePageForEpisodes(allEpisodes);
 
-  const input = document.getElementById("q");
-  input.addEventListener("input", function() {
-    const searchTerm= input.value.toLowerCase();
-  
-  
-    const filteredEpisodes= allEpisodes.filter(function(episode){
-      const name= episode.name.toLowerCase();
-      const summary= episode.summary.toLowerCase();
+  const countElem = document.getElementById("episodeCount");
+countElem.textContent=`Displaying ${allEpisodes.length} / ${allEpisodes.length} episodes`;
 
-return name.includes(searchTerm) || summary.includes(searchTerm);
+    const input = document.getElementById("q");
+  input.addEventListener("input", function () {
+    const searchTerm = input.value.toLowerCase();
+
+
+    const filteredEpisodes = allEpisodes.filter(function (episode) {
+      const name = episode.name.toLowerCase();
+      const summary = episode.summary.toLowerCase();
+
+      return name.includes(searchTerm) || summary.includes(searchTerm);
     });
 
     makePageForEpisodes(filteredEpisodes);
+    countElem.textContent = `Displaying ${filteredEpisodes.length} / ${
+      allEpisodes.length
+    } episode${filteredEpisodes.length !== 1 ? "s" : ""}`;
   });
 }
 
-function makePageForEpisodes(episodesList){
-
+function makePageForEpisodes(episodesList) {
   const rootElem = document.getElementById("root");
-//const episodeCountElem = document.getElementById("episodeCount");
+  //const episodeCountElem = document.getElementById("episodeCount");
 
-rootElem.innerHTML = "";
-//episodeCountElem.textContent = `Got ${episodesList.length} episode(s)`;
-
+  rootElem.innerHTML = "";
+  //episodeCountElem.textContent = `Got ${episodesList.length} episode(s)`;
 
   episodesList.forEach((episode) => {
-    const section = document.createElement("ListOfEpisodes");
+    const section = document.createElement("section");
     section.classList.add("episode-card");
 
     // make episode code
-    const episodeCode = `S${String(episode.season).padStart(2, "0")}E${String(episode.number).padStart(2, "0")}`;
+    const episodeCode = `S${String(episode.season).padStart(2, "0")}E${String(
+      episode.number
+    ).padStart(2, "0")}`;
 
     // join title with code
     const title = document.createElement("h2");
@@ -52,13 +58,13 @@ rootElem.innerHTML = "";
     const summary = document.createElement("p");
     summary.innerHTML = episode.summary || "No summary available.";
     section.appendChild(summary);
-    
+
     // Link to TVMaze for each episodes
     const link = document.createElement("a");
     link.href = episode.url;
     link.target = "_blank";
     link.textContent = "View on TVMaze";
-    section.appendChild(link);  
+    section.appendChild(link);
 
     // Append section to root
     rootElem.appendChild(section);
