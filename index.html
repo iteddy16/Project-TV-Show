@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | Tewodros Bekere (iteddy16)</title>
-    <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TV Show Project | Tewodros Bekere (iteddy16)</title>
+  <link href="style.css" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body>
 
-  <body>
-    <div id="root">
-    </div>
+  <label for="q">Search Episodes:</label>
+  <input type="search" id="q" name="q" placeholder="Search by name or summary" />
+  <select id="episodeSelect"></select>
 
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
+  <p id="episodeCount"></p>
 
-    <!-- Loads YOUR javascript code -->
-    <script src="script.js"></script>
-  </body>
+  <div id="root"></div>
+
+  <script src="episodes.js"></script>
+
+  <script src="script.js"></script>
+</body>
 </html>
