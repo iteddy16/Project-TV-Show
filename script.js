@@ -1,67 +1,63 @@
 function setup() {
   const rootElem = document.getElementById("root");
   const countElem = document.getElementById("episodeCount");
-  const select = document.getElementById("episodeSelect");
+  const episodeSelect = document.getElementById("episodeSelect");
+  const showSelect = document.getElementById("showSelect");
   const input = document.getElementById("q");
 
-  // Show loading message
-  const loadingMessage = document.createElement("p");
-  loadingMessage.textContent = "Loading episodes, please wait...";
-  rootElem.appendChild(loadingMessage);
 
-  fetch("https://api.tvmaze.com/shows/82/episodes")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok.");
-      }
-      return response.json();
-    })
-    .then((episodes) => {
-      rootElem.removeChild(loadingMessage);
+  // Cache variables - so we never fetch same URL twice
+  let allShows = null;
+  let episodeCache = {};
+  let currentEpisodes = [];
 
-      makePageForEpisodes(episodes);
-      countElem.textContent = `Displaying ${episodes.length} / ${episodes.length} episodes`;
+  loadAllShows(showSelect, allShows);
+
+showSelect.addEventListener("change", function(){
+  
+}
+
+   //   makePageForEpisodes(episodes);
+     // countElem.textContent = `Displaying ${episodes.length} / ${episodes.length} episodes`;
 
       // Populate dropdown
-      episodes.forEach((episode) => {
-        const option = document.createElement("option");
-        option.textContent = `${formatEpisodeCode(episode)} - ${episode.name}`;
-        option.value = episode.id;
-        select.appendChild(option);
-      });
+    //  episodes.forEach((episode) => {
+      //  const option = document.createElement("option");
+        //option.textContent = `${formatEpisodeCode(episode)} - ${episode.name}`;
+        //option.value = episode.id;
+        //episodeSelect.appendChild(option);
+      //});
 
       // Smooth scroll to selected episode
-      select.addEventListener("change", function () {
-        const selectedId = select.value;
-        if (selectedId) {
-          const target = document.getElementById(`episode-${selectedId}`);
-          if (target) {
-            target.scrollIntoView({ behavior: "smooth" });
-          }
-        }
-      });
+      //episodeSelect.addEventListener("change", function () {
+        //const selectedId = select.value;
+        //if (selectedId) {
+          //const target = document.getElementById(`episode-${selectedId}`);
+          //if (target) {
+           // target.scrollIntoView({ behavior: "smooth" });
+          //}
+        //}
+    //  });
 
       // Search functionality
-      input.addEventListener("input", function () {
-        const searchTerm = input.value.toLowerCase();
-        const filteredEpisodes = episodes.filter((episode) => {
-          const name = episode.name.toLowerCase();
-          const summary = episode.summary.toLowerCase();
-          return name.includes(searchTerm) || summary.includes(searchTerm);
-        });
+     // input.addEventListener("input", function () {
+       // const searchTerm = input.value.toLowerCase();
+        //const filteredEpisodes = episodes.filter((episode) => {
+         // const name = episode.name.toLowerCase();
+          //const summary = episode.summary.toLowerCase();
+          //return name.includes(searchTerm) || summary.includes(searchTerm);
+        //});
 
-        makePageForEpisodes(filteredEpisodes);
-        countElem.textContent = `Displaying ${filteredEpisodes.length} / ${episodes.length} episode${filteredEpisodes.length !== 1 ? "s" : ""}`;
-      });
-    })
-    .catch((error) => {
-      rootElem.removeChild(loadingMessage);
-      const errorMessage = document.createElement("p");
-      errorMessage.textContent = "Sorry, there was an error loading the episodes. Please try again later.";
-      errorMessage.style.color = "red";
-      rootElem.appendChild(errorMessage);
-    });
-}
+       // makePageForEpisodes(filteredEpisodes);
+        //countElem.textContent = `Displaying ${filteredEpisodes.length} / ${episodes.length} episode${filteredEpisodes.length !== 1 ? "s" : ""}`;
+      //});
+  
+//      rootElem.removeChild(loadingMessage);
+  //    const errorMessage = document.createElement("p");
+    //  errorMessage.textContent = "Sorry, there was an error loading the episodes. Please try again later.";
+      //errorMessage.style.color = "red";
+      //rootElem.appendChild(errorMessage);
+    
 
 function formatEpisodeCode(episode) {
   return `S${String(episode.season).padStart(2, "0")}E${String(
@@ -104,5 +100,29 @@ function makePageForEpisodes(episodesList) {
   });
 }
 
-window.onload = setup;
+async function loadAllShows(showSelect,allShows){
+  fetch("https://api.tvmaze.com/shows")
+  .then ((response)=> {
+    if(!response.ok) {
+      throw new Error("Network response was not ok.");
+    }
+    return response.json();
+  })
+  .then ((shows)=> {
+      shows.sort((a, b) => a.name.localeCompare(b.name));
+  showSelect.innerHTML = "";
 
+  shows.forEach((show)=> {
+    const option =document.createElement("option");
+    option.textContent = show.name;
+    option.value= show.id;
+    showSelect.appendChild(option);
+
+  });
+})
+.catch((error)=> {
+  console.error("Error loading shows:", error);
+});
+}
+
+window.onload = setup;
