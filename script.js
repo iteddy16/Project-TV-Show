@@ -2,7 +2,7 @@ function setup() {
   const rootElem = document.getElementById("root");
   const countElem = document.getElementById("episodeCount");
   const select = document.getElementById("episodeSelect");
-  const input = document.getElementById("q");
+  const input = document.getElementById("episodeSearch");
 
   // Show loading message
   const loadingMessage = document.createElement("p");

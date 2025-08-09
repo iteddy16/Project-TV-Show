@@ -8,14 +8,12 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-
-  <label for="q">Search Episodes:</label>
-  <input type="search" id="q" name="q" placeholder="Search by name or summary" />
-  <select id="episodeSelect"></select>
-
+  <div id="controls">
+    <select id="episodeSelect"></select>
+  <input type="text" id="episodeSearch" placeholder="Search episodes..." />
   <p id="episodeCount"></p>
-
-  <div id="root"></div>
+</div>
+<div id="root"></div>
 
   <script src="episodes.js"></script>
 
