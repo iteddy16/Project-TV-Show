@@ -25,7 +25,7 @@ function setup() {
           return response.json();
         })
         .then((episodes) => {
-         makePageForEpisodes(episodes, countElem);
+         makePageForEpisodes(episodes, countElem, episodeSelect);
         })
       }
     });
@@ -37,17 +37,23 @@ function formatEpisodeCode(episode) {
   ).padStart(2, "0")}`;
 }
 
-function makePageForEpisodes(episodesList, countElem) {
+function makePageForEpisodes(episodesList, countElem, episodeSelect) {
   const rootElem = document.getElementById("root");
   rootElem.innerHTML = "";
- 
+ episodeSelect.innerHTML = "";
+
   countElem.textContent = `Displaying ${episodesList.length} episodes` ;
   episodesList.forEach((episode) => {
+        const episodeCode = formatEpisodeCode(episode);
+
+    const option = document.createElement("option");
+    option.textContent = `${episode.name} - ${episodeCode}`;
+    episodeSelect.appendChild(option);
+
     const section = document.createElement("section");
     section.classList.add("episode-card");
     section.id = `episode-${episode.id}`;
 
-    const episodeCode = formatEpisodeCode(episode);
 
     const title = document.createElement("h2");
     title.classList.add("episode-title");
