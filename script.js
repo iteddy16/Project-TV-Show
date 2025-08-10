@@ -18,15 +18,16 @@ function setup() {
         const episodeUrl =
           "https://api.tvmaze.com/shows/" + selectedShowId + "/episodes";
         console.log("Episode URL:", episodeUrl);
-        fetch(episodeUrl).then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok.");
-          }
-          return response.json();
-        })
-        .then((episodes) => {
-         makePageForEpisodes(episodes, countElem, episodeSelect);
-        })
+        fetch(episodeUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok.");
+            }
+            return response.json();
+          })
+          .then((episodes) => {
+            makePageForEpisodes(episodes, countElem, episodeSelect);
+          });
       }
     });
   });
@@ -40,11 +41,11 @@ function formatEpisodeCode(episode) {
 function makePageForEpisodes(episodesList, countElem, episodeSelect) {
   const rootElem = document.getElementById("root");
   rootElem.innerHTML = "";
- episodeSelect.innerHTML = "";
+  episodeSelect.innerHTML = "";
 
-  countElem.textContent = `Displaying ${episodesList.length} episodes` ;
+  countElem.textContent = `Displaying ${episodesList.length} episodes`;
   episodesList.forEach((episode) => {
-        const episodeCode = formatEpisodeCode(episode);
+    const episodeCode = formatEpisodeCode(episode);
 
     const option = document.createElement("option");
     option.textContent = `${episode.name} - ${episodeCode}`;
@@ -53,7 +54,6 @@ function makePageForEpisodes(episodesList, countElem, episodeSelect) {
     const section = document.createElement("section");
     section.classList.add("episode-card");
     section.id = `episode-${episode.id}`;
-
 
     const title = document.createElement("h2");
     title.classList.add("episode-title");
