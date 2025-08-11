@@ -32,10 +32,10 @@ function setup() {
     });
   });
 }
+
 function formatEpisodeCode(episode) {
-  return `S${String(episode.season).padStart(2, "0")}E${String(
-    episode.number
-  ).padStart(2, "0")}`;
+  return "S" + String(episode.season).padStart(2, "0") +
+         "E" + String(episode.number).padStart(2, "0");
 }
 
 function makePageForEpisodes(episodesList, countElem, episodeSelect) {
@@ -43,25 +43,30 @@ function makePageForEpisodes(episodesList, countElem, episodeSelect) {
   rootElem.innerHTML = "";
   episodeSelect.innerHTML = "";
 
-  countElem.textContent = `Displaying ${episodesList.length} episodes`;
+  countElem.textContent = "Displaying " + episodesList.length + " episodes";
+
   episodesList.forEach((episode) => {
     const episodeCode = formatEpisodeCode(episode);
 
     const option = document.createElement("option");
-    option.textContent = `${episode.name} - ${episodeCode}`;
+    option.textContent = episode.name + " - " + episodeCode;
     episodeSelect.appendChild(option);
 
     const section = document.createElement("section");
     section.classList.add("episode-card");
-    section.id = `episode-${episode.id}`;
+    section.id = "episode-" + episode.id;
 
     const title = document.createElement("h2");
     title.classList.add("episode-title");
-    title.textContent = `${episode.name} – ${episodeCode}`;
+    title.textContent = episode.name + " – " + episodeCode;
     section.appendChild(title);
 
     const image = document.createElement("img");
-    image.src = episode.image?.medium || "";
+    let imgUrl = (episode.image && episode.image.medium)
+      ? episode.image.medium
+      : "https://via.placeholder.com/210x295?text=No+Image";
+    imgUrl = imgUrl.replace(/^http:/, "https:"); // force HTTPS
+    image.src = imgUrl;
     image.alt = episode.name;
     section.appendChild(image);
 
