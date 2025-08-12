@@ -7,14 +7,16 @@ function setup() {
   const showSelect = document.getElementById("showSelect");
   const input = document.getElementById("q");
 
-  input.addEventListener("input", function(){
+  input.addEventListener("input", function () {
     const searchTerm = input.value.toLowerCase();
-    const filteredEpisodes= currentEpisodes.filter(episode => {
-    return episode.name.toLowerCase().includes (searchTerm) ||
-        episode.summary.toLowerCase().includes (searchTerm)
+    const filteredEpisodes = currentEpisodes.filter((episode) => {
+      return (
+        episode.name.toLowerCase().includes(searchTerm) ||
+        episode.summary.toLowerCase().includes(searchTerm)
+      );
     });
 
- makePageForEpisodes(filteredEpisodes, countElem, episodeSelect);
+    makePageForEpisodes(filteredEpisodes, countElem, episodeSelect);
   });
   // Cache variables - so we never fetch same URL twice
   let allShows = null;
@@ -41,6 +43,10 @@ function setup() {
           });
       }
     });
+    if (showSelect.options.length > 0) {
+        showSelect.value = showSelect.options[0].value;
+        showSelect.dispatchEvent(new Event("change"));
+    }
   });
 }
 
@@ -118,9 +124,9 @@ async function loadAllShows(showSelect, allShows) {
         option.value = show.id;
         showSelect.appendChild(option);
       });
+    
     })
     .catch((error) => {
-      console.error("Error loading shows:", error);
     });
 }
 
