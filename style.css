@@ -59,7 +59,7 @@ body {
   text-align: left;
 }
 
-#controls {
+.controls {
   display: flex;
   align-items: center;
   gap: 10px; 
@@ -70,8 +70,8 @@ body {
   z-index: 10;
 }
 
-#episodeSelect, 
-#episodeSearch {
+.episodeSelect, 
+.episodeSearch {
   padding: 6px 8px;
   font-size: 0.85rem;
   border-radius: 6px;
@@ -79,7 +79,7 @@ body {
   width: 300px; 
 }
 
-#episodeCount {
+.episodeCount {
   white-space: nowrap;
   
   margin: 0;
