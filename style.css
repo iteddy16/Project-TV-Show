@@ -79,7 +79,7 @@ body {
   width: 300px; 
 }
 
-episodeCount {
+.episodeCount {
   white-space: nowrap;
   
   
