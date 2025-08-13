@@ -3,9 +3,14 @@ let currentEpisodes = [];
 function setup() {
   const rootElem = document.getElementById("root");
   const countElem = document.getElementById("episodeCount");
-  const episodeSelect = document.getElementById("episodeSelect");
+//<<<<<<< level-400
+  //const episodeSelect = document.getElementById("episodeSelect");
   const showSelect = document.getElementById("showSelect");
-  const input = document.getElementById("q");
+  //const input = document.getElementById("q");
+//=======
+  const select = document.getElementById("episodeSelect");
+  const input = document.getElementById("episodeSearch");
+//>>>>>>> main
 
   input.addEventListener("input", function () {
     const searchTerm = input.value.toLowerCase();

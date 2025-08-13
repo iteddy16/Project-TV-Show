@@ -58,3 +58,31 @@ body {
   padding: 10px;
   text-align: left;
 }
+
+#controls {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+  padding: 10px;
+  background-color: #f9f9f9;
+  position: sticky; 
+  top: 0;
+  z-index: 10;
+}
+
+#episodeSelect, 
+#episodeSearch {
+  padding: 6px 8px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 300px; 
+}
+
+#episodeCount {
+  white-space: nowrap;
+  
+  margin: 0;
+}
+
+
