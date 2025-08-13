@@ -8,25 +8,21 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-<!--<<<<<<< level-400
-<select id ="showSelect">
-  <option value="">Loading shows...</option>
-</select>
-  <label for="q">Search Episodes:</label>
+<div class="controls">
+    <label for="showSelect"></label>
+    <select id="showSelect"></select>
 
-  <select id="episodeSelect"></select>
-    <input type="search" id="q" name="q" placeholder="Search by name or summary" />
-
-  <p id="episodeCount"></p>
-  <div id="root"></div>
-======= -->
-  <div id="controls">
+    <label for="episodeSelect"></label>
     <select id="episodeSelect"></select>
-  <input type="text" id="episodeSearch" placeholder="Search episodes..." />
-  <p id="episodeCount"></p>
-</div>
-<div id="root"></div>
-<!-->>>>>>> main-->
+
+    <label for="episodeSearch"></label>
+    <input type="text" id="episodeSearch" placeholder="Search....">
+
+    <span id="episodeCount">Displaying 0 episodes</span>
+  </div>
+
+  <div id="root"></div>
+
 
   <script src="script.js"></script>
 </body>

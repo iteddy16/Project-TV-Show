@@ -3,14 +3,9 @@ let currentEpisodes = [];
 function setup() {
   const rootElem = document.getElementById("root");
   const countElem = document.getElementById("episodeCount");
-//<<<<<<< level-400
-  //const episodeSelect = document.getElementById("episodeSelect");
+  const episodeSelect = document.getElementById("episodeSelect");
   const showSelect = document.getElementById("showSelect");
-  //const input = document.getElementById("q");
-//=======
-  const select = document.getElementById("episodeSelect");
   const input = document.getElementById("episodeSearch");
-//>>>>>>> main
 
   input.addEventListener("input", function () {
     const searchTerm = input.value.toLowerCase();
@@ -23,6 +18,18 @@ function setup() {
 
     makePageForEpisodes(filteredEpisodes, countElem, episodeSelect);
   });
+
+  // Episode select scroll behavior
+  episodeSelect.addEventListener("change", function () {
+    const selectedId = episodeSelect.value;
+    if (selectedId) {
+      const targetElem = document.getElementById("episode-" + selectedId);
+      if (targetElem) {
+        targetElem.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  });
+
   // Cache variables - so we never fetch same URL twice
   let allShows = null;
   let episodeCache = {};
@@ -48,9 +55,10 @@ function setup() {
           });
       }
     });
+
     if (showSelect.options.length > 0) {
-        showSelect.value = showSelect.options[0].value;
-        showSelect.dispatchEvent(new Event("change"));
+      showSelect.value = showSelect.options[0].value;
+      showSelect.dispatchEvent(new Event("change"));
     }
   });
 }
@@ -76,6 +84,7 @@ function makePageForEpisodes(episodesList, countElem, episodeSelect) {
 
     const option = document.createElement("option");
     option.textContent = episode.name + " - " + episodeCode;
+    option.value = episode.id; // Needed for scrolling
     episodeSelect.appendChild(option);
 
     const section = document.createElement("section");
@@ -129,9 +138,9 @@ async function loadAllShows(showSelect, allShows) {
         option.value = show.id;
         showSelect.appendChild(option);
       });
-    
     })
     .catch((error) => {
+      console.error(error);
     });
 }
 
