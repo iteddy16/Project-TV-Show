@@ -61,6 +61,7 @@ function setup() {
       showSelect.dispatchEvent(new Event("change"));
     }
   });
+  //
 }
 
 function formatEpisodeCode(episode) {
