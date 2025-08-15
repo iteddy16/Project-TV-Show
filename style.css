@@ -1,56 +1,55 @@
-#root {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  padding: 20px;
-  max-width: 1200px;
-  margin: auto;
-}
-
+/* ===== Body ===== */
 body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans';
   margin: 0;
   line-height: 1.8cap;
   text-align: justify;
-  background-color: ;
   background-color: #f7f7f7;
   color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added from CSS-new */
 }
 
-#episode-card {
+/* ===== Root Container ===== */
+#root {
+  display: flex; /* changed from grid to flex for CSS-new styling */
+  justify-content: center;
+  flex-wrap: wrap;
+  color: rgb(24, 23, 23);
+  margin-top: 10px;
+  padding: 20px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  gap: 20px;
+}
+
+/* ===== Episode Card ===== */
+.episode-card {
   background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border: 1px solid #ddd; /* kept old border */
+  border-radius: 8px; /* unified with CSS-new */
+  padding: 16px; /* CSS-new */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* CSS-new */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-}
-
-#episode-title {
-  background-color: #f0f0f0;
-  border-radius: 20px;
-  padding: 10px;
-  margin-bottom: 10px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  border: 5px solid #ccc;
+  max-width: 300px;
+  margin: 16px;
 }
 
 .episode-card img {
   width: 100%;
-  border-radius: 8px;
+  height: auto; /* CSS-new */
+  border-radius: 5px; /* CSS-new */
   margin-bottom: 10px;
 }
 
-#episode-card p {
+.episode-card p {
   font-size: 14px;
   line-height: 1.6;
 }
 
-#episode-card a {
+.episode-card a {
   color: #0066cc;
   text-decoration: none;
   font-size: 13px;
@@ -59,31 +58,69 @@ body {
   text-align: left;
 }
 
-#controls {
+/* ===== Show Card ===== */
+.show-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  border-radius: 8px;
+  background-color: white;
+  max-width: 300px;
+  margin: 16px;
+}
+
+.show-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+/* ===== Controls ===== */
+
+.controls {
   display: flex;
   align-items: center;
-  gap: 10px; 
+  flex-wrap: wrap;
+  gap: 10px;
   padding: 10px;
   background-color: #f9f9f9;
-  position: sticky; 
+  position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 999;
 }
 
-#episodeSelect, 
-#episodeSearch {
-  padding: 6px 8px;
-  font-size: 0.85rem;
+#controls button {
+  padding: 6px 12px;
+  border: none;
+  background-color: #007acc;
+  color: white;
   border-radius: 6px;
-  border: 1px solid #ccc;
-  width: 300px; 
+  cursor: pointer;
 }
 
-#episodeCount {
+#controls button:hover {
+  background-color: #005fa3;
+}
+
+/* ===== Input Fields ===== */
+
+.search-input,
+.episode-select,
+.show-select {
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 300px;
+}
+
+/* ===== Count Display ===== */
+
+#count-display {
   white-space: nowrap;
-  
-  
   margin: 0;
 }
 
-
+/* ===== Error Message ===== */
+.error-message {
+  color: red;
+}
