@@ -60,13 +60,16 @@ function showShowsListing() {
     updateShowCount(filteredShows.length);
 
     if (query) {
-      showSelect.style.display = "inline-block";
-      populateShowDropdown(filteredShows, query);
-      showSelect.selectedIndex = 1;
-    } else {
-      showSelect.style.display = "none";
-      clearShowDropdown();
-    }
+  showSelect.style.display = "inline-block";
+  populateShowDropdown(filteredShows, query);
+  if (showSelect.options.length > 1) {
+    showSelect.selectedIndex = 1;
+  }
+} else {
+  showSelect.style.display = "none";
+  clearShowDropdown();
+}
+
   });
 
   searchInput.addEventListener("keydown", (e) => {
@@ -86,11 +89,16 @@ function showShowsListing() {
     countDisplay.textContent = `Found ${count}/${cachedShows.length} shows`;
   }
 
-  function highlightText(text, query) {
-    if (!query) return text;
-    const regex = new RegExp(`(${query})`, "gi");
-    return text.replace(regex, "<mark>$1</mark>");
-  }
+function escapeRegex(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlightText(text, query) {
+  if (!query) return text;
+  const safeQuery = escapeRegex(query);
+  const regex = new RegExp(`(${safeQuery})`, "gi");
+  return text.replace(regex, "<mark>$1</mark>");
+}
 
   function populateShowDropdown(shows, query = "") {
     showSelect.innerHTML = `<option value="" disabled selected>Select a show...</option>` +
