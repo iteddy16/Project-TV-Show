@@ -110,10 +110,39 @@ function clearShowDropdown() {
   }
 
 
+ // Show card layout with clickable titles
+  function renderShowCards(shows, query = "") {
+    rootElem.innerHTML = "";
+    const fragment = document.createDocumentFragment();
+    shows.forEach(show => {
+      const card = document.createElement("section");
+      card.classList.add("show-card");
+      card.innerHTML = `
+        <h2 class="show-title" data-id="${show.id}" style="cursor:pointer">
+          ${highlightText(show.name, query)}
+        </h2>
+        <img src="${show.image?.medium || "https://via.placeholder.com/210x295?text=No+Image"}" alt="${show.name}">
+        <div>${highlightText(show.summary || "No summary available.", query)}</div>
+        <p><strong>Genres:</strong> ${highlightText(show.genres.join(", "), query)}</p>
+        <p><strong>Status:</strong> ${show.status}</p>
+        <p><strong>Rating:</strong> ${show.rating?.average || "N/A"}</p>
+        <p><strong>Runtime:</strong> ${show.runtime || "N/A"} mins</p>
+      `;
+      card.querySelector(".show-title").addEventListener("click", e =>
+        loadEpisodes(e.target.dataset.id) // NEW: Click title to load episodes
+      );
+      fragment.appendChild(card);
+    });
+    rootElem.appendChild(fragment);
+  }
+}
 
 
 
-  
+
+
+
+
 
 
 function formatEpisodeCode(episode) {
