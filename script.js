@@ -86,9 +86,34 @@ function showShowsListing() {
     }
   });
 
+function updateShowCount(count) {
+    countDisplay.textContent = `Found ${count}/${cachedShows.length} shows`;
+  }
+
+  // Highlight search terms
+function highlightText(text, query) {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, "gi");
+    return text.replace(regex, "<mark>$1</mark>");
+  }
+
+function populateShowDropdown(shows, query = "") {
+    showSelect.innerHTML = `<option value="" disabled selected>Select a show...</option>` +
+      shows.map(show => {
+        const highlightedName = highlightText(show.name, query);
+        return `<option value="${show.id}">${highlightedName}</option>`;
+      }).join("");
+  }
+
+function clearShowDropdown() {
+    showSelect.innerHTML = `<option value="" disabled selected>Select a show...</option>`;
+  }
 
 
 
+
+
+  
 
 
 function formatEpisodeCode(episode) {
