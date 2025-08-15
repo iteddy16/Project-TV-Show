@@ -22,7 +22,69 @@ async function setup() {
   }
 }
 
+function showShowsListing() {
+  rootElem.innerHTML = "";
+  controls.innerHTML = "";
 
+  // Search input for shows
+  const searchInput = document.createElement("input");
+  searchInput.id = "show-search";
+  searchInput.placeholder = "Filtering for...";
+  controls.appendChild(searchInput);
+
+  // Dropdown for quick selection of shows (hidden initially)
+  const showSelect = document.createElement("select");
+  showSelect.id = "show-select";
+  showSelect.style.display = "none";
+  showSelect.innerHTML = `<option value="" disabled selected>Select a show...</option>`;
+  controls.appendChild(showSelect);
+
+  // Show count display
+  const countDisplay = document.createElement("p");
+  countDisplay.id = "show-count";
+  controls.appendChild(countDisplay);
+
+  // Render all shows as cards initially
+  renderShowCards(cachedShows);
+  updateShowCount(cachedShows.length);
+
+  // Live show search with highlighting and genre/summary matching
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.trim().toLowerCase();
+    const filteredShows = cachedShows.filter(show =>
+      show.name.toLowerCase().includes(query) ||
+      show.genres.join(" ").toLowerCase().includes(query) ||
+      (show.summary?.toLowerCase() || "").includes(query)
+    );
+
+    renderShowCards(filteredShows, query);
+    updateShowCount(filteredShows.length);
+
+    // Show dropdown only when searching
+    if (query) {
+      showSelect.style.display = "inline-block";
+      populateShowDropdown(filteredShows, query);
+      showSelect.selectedIndex = 1; // Auto-select first match
+    } else {
+      showSelect.style.display = "none";
+      clearShowDropdown();
+    }
+  });
+
+  // Keyboard navigation from search to dropdown
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown" && showSelect.style.display !== "none") {
+      e.preventDefault();
+      showSelect.focus();
+    }
+  });
+
+  // Selecting from dropdown loads episodes
+  showSelect.addEventListener("change", () => {
+    if (showSelect.value) {
+      loadEpisodes(showSelect.value);
+    }
+  });
 
 
 
