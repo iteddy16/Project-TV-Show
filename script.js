@@ -7,64 +7,27 @@ let cachedEpisodes = {};
 
   document.addEventListener("DOMContentLoaded", setup);
 
-  
-
-  input.addEventListener("input", function () {
-    const searchTerm = input.value.toLowerCase();
-    const filteredEpisodes = currentEpisodes.filter((episode) => {
-      return (
-        episode.name.toLowerCase().includes(searchTerm) ||
-        episode.summary.toLowerCase().includes(searchTerm)
-      );
-    });
-
-    makePageForEpisodes(filteredEpisodes, countElem, episodeSelect);
-  });
-
-  // Episode select scroll behavior
-  episodeSelect.addEventListener("change", function () {
-    const selectedId = episodeSelect.value;
-    if (selectedId) {
-      const targetElem = document.getElementById("episode-" + selectedId);
-      if (targetElem) {
-        targetElem.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+async function setup() {
+  try {
+    if (cachedShows.length === 0) {
+      const res = await fetch("https://api.tvmaze.com/shows");
+      if (!res.ok) throw new Error("Network error");
+      cachedShows = await res.json();
+      cachedShows.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
     }
-  });
-
-  // Cache variables - so we never fetch same URL twice
-  let allShows = null;
-  let episodeCache = {};
-
-  loadAllShows(showSelect, allShows).then(() => {
-    showSelect.addEventListener("change", function () {
-      const selectedShowId = showSelect.value;
-
-      if (selectedShowId) {
-        const episodeUrl =
-          "https://api.tvmaze.com/shows/" + selectedShowId + "/episodes";
-        console.log("Episode URL:", episodeUrl);
-        fetch(episodeUrl)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok.");
-            }
-            return response.json();
-          })
-          .then((episodes) => {
-            currentEpisodes = episodes;
-            makePageForEpisodes(episodes, countElem, episodeSelect);
-          });
-      }
-    });
-
-    if (showSelect.options.length > 0) {
-      showSelect.value = showSelect.options[0].value;
-      showSelect.dispatchEvent(new Event("change"));
-    }
-  });
-  //
+    showShowsListing();
+  } catch (err) {
+    rootElem.innerHTML = `<p class="error-message">Oops! Something went wrong loading shows.</p>`;
+    console.error(err);
+  }
 }
+
+
+
+
+
+
+
 
 function formatEpisodeCode(episode) {
   return (
