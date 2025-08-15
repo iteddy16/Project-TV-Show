@@ -1,23 +1,28 @@
 let currentEpisodes = [];
-let cachedShows = [];
-let cachedEpisodes = {};
+let cachedShows = [];          // Cache for all shows
+let cachedEpisodes = {};       // Cache for episodes per show
 
-  const rootElem = document.getElementById("root");
-  const controls = document.getElementById("controls");
+document.addEventListener("DOMContentLoaded", setup); // Use DOMContentLoaded instead of window.onload
 
-  document.addEventListener("DOMContentLoaded", setup);
+const rootElem = document.getElementById("root");
+const controls = document.getElementById("controls");
+
+function formatEpisodeCode(episode) {
+  return `S${String(episode.season).padStart(2, "0")}E${String(episode.number).padStart(2, "0")}`;
+}
 
 async function setup() {
   try {
+    // Cache shows so they are only fetched once
     if (cachedShows.length === 0) {
       const res = await fetch("https://api.tvmaze.com/shows");
       if (!res.ok) throw new Error("Network error");
       cachedShows = await res.json();
       cachedShows.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
     }
-    showShowsListing();
+    showShowsListing(); // Start at shows listing page, not a default show
   } catch (err) {
-    rootElem.innerHTML = `<p class="error-message">Oops! Something went wrong loading shows.</p>`;
+    rootElem.innerHTML = `<p class="error-message">Oops! Something went wrong loading shows.</p>`; // User-friendly error message
     console.error(err);
   }
 }
@@ -64,7 +69,7 @@ function showShowsListing() {
     if (query) {
       showSelect.style.display = "inline-block";
       populateShowDropdown(filteredShows, query);
-      showSelect.selectedIndex = 1; // Auto-select first match
+      showSelect.selectedIndex = 1; // NEW: Auto-select first match
     } else {
       showSelect.style.display = "none";
       clearShowDropdown();
@@ -86,18 +91,18 @@ function showShowsListing() {
     }
   });
 
-function updateShowCount(count) {
+  function updateShowCount(count) {
     countDisplay.textContent = `Found ${count}/${cachedShows.length} shows`;
   }
 
   // Highlight search terms
-function highlightText(text, query) {
+  function highlightText(text, query) {
     if (!query) return text;
     const regex = new RegExp(`(${query})`, "gi");
     return text.replace(regex, "<mark>$1</mark>");
   }
 
-function populateShowDropdown(shows, query = "") {
+  function populateShowDropdown(shows, query = "") {
     showSelect.innerHTML = `<option value="" disabled selected>Select a show...</option>` +
       shows.map(show => {
         const highlightedName = highlightText(show.name, query);
@@ -105,12 +110,11 @@ function populateShowDropdown(shows, query = "") {
       }).join("");
   }
 
-function clearShowDropdown() {
+  function clearShowDropdown() {
     showSelect.innerHTML = `<option value="" disabled selected>Select a show...</option>`;
   }
 
-
- // Show card layout with clickable titles
+  // Show card layout with clickable titles
   function renderShowCards(shows, query = "") {
     rootElem.innerHTML = "";
     const fragment = document.createDocumentFragment();
@@ -164,7 +168,7 @@ async function loadEpisodes(showId) {
     makePageForEpisodes(episodes);
     setupEpisodeControls(episodes);
   } catch (err) {
-    rootElem.innerHTML = `<p class="error-message">Check your code! Something went wrong loading episodes.</p>`; // Friendly error message
+    rootElem.innerHTML = `<p class="error-message">Oops! Something went wrong loading episodes.</p>`; // Friendly error message
     console.error(err);
   }
 }
@@ -191,7 +195,6 @@ function makePageForEpisodes(episodesList) {
 
   rootElem.appendChild(fragment);
 }
-
 
 function setupEpisodeControls(episodes) {
   // Dropdown to jump to episodes

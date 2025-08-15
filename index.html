@@ -3,26 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TV Show Project | Tewodros Bekere (iteddy16)</title>
+  <title>TV Show Project | Tewodros T. Bekere (iteddy16)</title>
   <link href="style.css" rel="stylesheet" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-<div class="controls">
-    <label for="showSelect"></label>
-    <select id="showSelect"></select>
+  <!-- Controls container for navigation/search -->
+  <header>
+    <div id="controls" class="controls">
+      <!-- Show selection -->
+      <label for="showSelect"></label>
+      <select id="showSelect"></select>
 
-    <label for="episodeSelect"></label>
-    <select id="episodeSelect"></select>
+      <!-- Episode selection -->
+      <label for="episodeSelect"></label>
+      <select id="episodeSelect"></select>
 
-    <label for="episodeSearch"></label>
-    <input type="text" id="episodeSearch" placeholder="Search....">
+      <!-- Episode search -->
+      <label for="episodeSearch"></label>
+      <input type="text" id="episodeSearch" placeholder="">
 
-    <span id="episodeCount">Displaying 0 episodes</span>
-  </div>
+      <!-- Episode count -->
+      <span id="episodeCount"></span>
+    </div>
+  </header>
 
-  <div id="root"></div>
+  <!-- Main content area -->
+  <main id="root"></main>
 
+  <!-- Footer with data source -->
+  <footer>
+    <a href="https://tvmaze.com" target="_blank">Data source: TVmaze.com</a>
+  </footer>
 
   <script src="script.js"></script>
 </body>
