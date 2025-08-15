@@ -164,9 +164,32 @@ async function loadEpisodes(showId) {
     makePageForEpisodes(episodes);
     setupEpisodeControls(episodes);
   } catch (err) {
-    rootElem.innerHTML = `<p class="error-message">Oops! Something went wrong loading episodes.</p>`; // Friendly error
+    rootElem.innerHTML = `<p class="error-message">Check your code! Something went wrong loading episodes.</p>`; // Friendly error message
     console.error(err);
   }
+}
+
+function makePageForEpisodes(episodesList) {
+  rootElem.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+
+  episodesList.forEach(episode => {
+    const section = document.createElement("section");
+    section.classList.add("episode-card");
+    section.dataset.name = episode.name.toLowerCase();       // Store lowercase name for search
+    section.dataset.summary = episode.summary?.toLowerCase() || ""; // Store lowercase summary for search
+    section.id = formatEpisodeCode(episode);
+
+    section.innerHTML = `
+      <h2>${episode.name} – ${section.id}</h2>
+      <img src="${episode.image?.medium || "https://via.placeholder.com/210x295?text=No+Image"}" alt="${episode.name}">
+      <div>${episode.summary || "No summary available."}</div>
+      <a href="${episode.url}" target="_blank">View on TVMaze</a>
+    `;
+    fragment.appendChild(section);
+  });
+
+  rootElem.appendChild(fragment);
 }
 
 
