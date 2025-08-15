@@ -37,7 +37,7 @@ function showShowsListing() {
 
   const showSelect = document.createElement("select");
   showSelect.id = "show-select";
-  showSelect.style.display = "none"; 
+  showSelect.style.display = "none";
   showSelect.innerHTML = `<option value="" disabled selected>Select a show...</option>`;
   controls.appendChild(showSelect);
 
@@ -56,13 +56,15 @@ function showShowsListing() {
       (show.summary?.toLowerCase() || "").includes(query)
     );
 
-    renderShowCards(filteredShows, query);
+    renderShowCards(filteredShows);
     updateShowCount(filteredShows.length);
 
     if (query) {
       showSelect.style.display = "inline-block";
-      populateShowDropdown(filteredShows, query);
-      showSelect.selectedIndex = 1;
+      populateShowDropdown(filteredShows);
+      if (showSelect.options.length > 1) {
+        showSelect.selectedIndex = 1;
+      }
     } else {
       showSelect.style.display = "none";
       clearShowDropdown();
@@ -86,29 +88,20 @@ function showShowsListing() {
     countDisplay.textContent = `Found ${count}/${cachedShows.length} shows`;
   }
 
-  function highlightText(text, query) {
-    if (!query) return text;
-    const regex = new RegExp(`(${query})`, "gi");
-    return text.replace(regex, "<mark>$1</mark>");
-  }
-
-  function populateShowDropdown(shows, query = "") {
+  function populateShowDropdown(shows) {
     showSelect.innerHTML = `<option value="" disabled selected>Select a show...</option>` +
-      shows.map(show => {
-        const highlightedName = highlightText(show.name, query);
-        return `<option value="${show.id}">${highlightedName}</option>`;
-      }).join("");
+      shows.map(show => `<option value="${show.id}">${show.name}</option>`).join("");
   }
 
   function clearShowDropdown() {
     showSelect.innerHTML = `<option value="" disabled selected>Select a show...</option>`;
   }
 
-  function renderShowCards(shows, query = "") {
+  function renderShowCards(shows) {
     rootElem.innerHTML = "";
     const fragment = document.createDocumentFragment();
 
-    const MAX_SUMMARY_LENGTH = 300; // Max characters for show description
+    const MAX_SUMMARY_LENGTH = 300;
 
     shows.forEach(show => {
       const card = document.createElement("section");
@@ -120,18 +113,16 @@ function showShowsListing() {
       }
 
       card.innerHTML = `
-        <h2 class="show-title" data-id="${show.id}" style="cursor:pointer">
-          ${highlightText(show.name, query)}
-        </h2>
+        <h2 class="show-title" data-id="${show.id}" style="cursor:pointer">${show.name}</h2>
         <img src="${show.image?.medium || "https://via.placeholder.com/210x295?text=No+Image"}" alt="${show.name}">
-        <div>${highlightText(summaryText, query)}</div>
-        <p><strong>Genres:</strong> ${highlightText(show.genres.join(", "), query)}</p>
+        <div>${summaryText}</div>
+        <p><strong>Genres:</strong> ${show.genres.join(", ")}</p>
         <p><strong>Status:</strong> ${show.status}</p>
         <p><strong>Rating:</strong> ${show.rating?.average || "N/A"}</p>
         <p><strong>Runtime:</strong> ${show.runtime || "N/A"} mins</p>
       `;
-      card.querySelector(".show-title").addEventListener("click", e =>
-        loadEpisodes(e.target.dataset.id)
+      card.querySelector(".show-title").addEventListener("click", () =>
+        loadEpisodes(show.id)
       );
       fragment.appendChild(card);
     });
