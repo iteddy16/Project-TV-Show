@@ -129,7 +129,7 @@ function clearShowDropdown() {
         <p><strong>Runtime:</strong> ${show.runtime || "N/A"} mins</p>
       `;
       card.querySelector(".show-title").addEventListener("click", e =>
-        loadEpisodes(e.target.dataset.id) // NEW: Click title to load episodes
+        loadEpisodes(e.target.dataset.id) // Click title to load episodes
       );
       fragment.appendChild(card);
     });
@@ -137,7 +137,37 @@ function clearShowDropdown() {
   }
 }
 
+async function loadEpisodes(showId) {
+  try {
+    rootElem.innerHTML = "";
+    controls.innerHTML = "";
 
+    // Back button to shows listing
+    const backBtn = document.createElement("button");
+    backBtn.textContent = "← Back to Shows";
+    backBtn.addEventListener("click", showShowsListing);
+    controls.appendChild(backBtn);
+
+    // Use cached episodes if available
+    let episodes;
+    if (cachedEpisodes[showId]) {
+      episodes = cachedEpisodes[showId];
+    } else {
+      const res = await fetch(`https://api.tvmaze.com/shows/${showId}/episodes`);
+      if (!res.ok) throw new Error("Network error");
+      episodes = await res.json();
+      cachedEpisodes[showId] = episodes;
+    }
+
+    currentEpisodes = episodes;
+
+    makePageForEpisodes(episodes);
+    setupEpisodeControls(episodes);
+  } catch (err) {
+    rootElem.innerHTML = `<p class="error-message">Oops! Something went wrong loading episodes.</p>`; // Friendly error
+    console.error(err);
+  }
+}
 
 
 
