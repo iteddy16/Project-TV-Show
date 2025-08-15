@@ -1,11 +1,13 @@
 let currentEpisodes = [];
+let cachedShows = [];
+let cachedEpisodes = {};
 
-function setup() {
   const rootElem = document.getElementById("root");
-  const countElem = document.getElementById("episodeCount");
-  const episodeSelect = document.getElementById("episodeSelect");
-  const showSelect = document.getElementById("showSelect");
-  const input = document.getElementById("episodeSearch");
+  const controls = document.getElementById("controls");
+
+  document.addEventListener("DOMContentLoaded", setup);
+
+  
 
   input.addEventListener("input", function () {
     const searchTerm = input.value.toLowerCase();
