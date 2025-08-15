@@ -193,90 +193,42 @@ function makePageForEpisodes(episodesList) {
 }
 
 
+function setupEpisodeControls(episodes) {
+  // Dropdown to jump to episodes
+  const episodeSelect = document.createElement("select");
+  episodeSelect.id = "episode-select";
+  episodeSelect.innerHTML = `<option value="" disabled selected>Jump to episode...</option>` +
+    episodes.map(ep => {
+      const code = formatEpisodeCode(ep);
+      return `<option value="${code}">${code} - ${ep.name}</option>`;
+    }).join("");
 
+  // Search box for filtering episodes
+  const searchInput = document.createElement("input");
+  searchInput.id = "episode-search";
+  searchInput.placeholder = "Search episodes...";
 
+  // Display count of visible episodes
+  const countDisplay = document.createElement("p");
+  countDisplay.id = "episode-count";
+  countDisplay.textContent = `Displaying ${episodes.length}/${episodes.length} episodes`;
 
+  controls.append(episodeSelect, searchInput, countDisplay);
 
+  episodeSelect.addEventListener("change", e => {
+    const target = document.getElementById(e.target.value);
+    if (target) target.scrollIntoView({ behavior: "smooth" });
+  });
 
-function formatEpisodeCode(episode) {
-  return (
-    "S" +
-    String(episode.season).padStart(2, "0") +
-    "E" +
-    String(episode.number).padStart(2, "0")
-  );
-}
-
-function makePageForEpisodes(episodesList, countElem, episodeSelect) {
-  const rootElem = document.getElementById("root");
-  rootElem.innerHTML = "";
-  episodeSelect.innerHTML = "";
-
-  countElem.textContent = "Displaying " + episodesList.length + " episodes";
-
-  episodesList.forEach((episode) => {
-    const episodeCode = formatEpisodeCode(episode);
-
-    const option = document.createElement("option");
-    option.textContent = episode.name + " - " + episodeCode;
-    option.value = episode.id; // Needed for scrolling
-    episodeSelect.appendChild(option);
-
-    const section = document.createElement("section");
-    section.classList.add("episode-card");
-    section.id = "episode-" + episode.id;
-
-    const title = document.createElement("h2");
-    title.classList.add("episode-title");
-    title.textContent = episode.name + " – " + episodeCode;
-    section.appendChild(title);
-
-    const image = document.createElement("img");
-    let imgUrl =
-      episode.image && episode.image.medium
-        ? episode.image.medium
-        : "https://via.placeholder.com/210x295?text=No+Image";
-    imgUrl = imgUrl.replace(/^http:/, "https:"); // force HTTPS
-    image.src = imgUrl;
-    image.alt = episode.name;
-    section.appendChild(image);
-
-    const summary = document.createElement("p");
-    summary.innerHTML = episode.summary || "No summary available.";
-    section.appendChild(summary);
-
-    const link = document.createElement("a");
-    link.href = episode.url;
-    link.target = "_blank";
-    link.textContent = "View on TVMaze";
-    section.appendChild(link);
-
-    rootElem.appendChild(section);
+  // Real-time filtering for episodes
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.trim().toLowerCase();
+    let matches = 0;
+    document.querySelectorAll(".episode-card").forEach(card => {
+      const match = card.dataset.name.includes(query) || card.dataset.summary.includes(query);
+      card.style.display = match ? "block" : "none";
+      if (match) matches++;
+    });
+    countDisplay.textContent = `Displaying ${matches}/${episodes.length} episodes`;
   });
 }
-
-async function loadAllShows(showSelect, allShows) {
-  return fetch("https://api.tvmaze.com/shows")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok.");
-      }
-      return response.json();
-    })
-    .then((shows) => {
-      shows.sort((a, b) => a.name.localeCompare(b.name));
-      showSelect.innerHTML = "";
-
-      shows.forEach((show) => {
-        const option = document.createElement("option");
-        option.textContent = show.name;
-        option.value = show.id;
-        showSelect.appendChild(option);
-      });
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
-
-window.onload = setup;
