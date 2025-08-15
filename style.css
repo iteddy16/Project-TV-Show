@@ -17,7 +17,7 @@ body {
   color: #333;
 }
 
-.episode-card {
+#episode-card {
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 12px;
@@ -28,7 +28,7 @@ body {
   justify-content: flex-start;
 }
 
-.episode-title {
+#episode-title {
   background-color: #f0f0f0;
   border-radius: 20px;
   padding: 10px;
@@ -45,12 +45,12 @@ body {
   margin-bottom: 10px;
 }
 
-.episode-card p {
+#episode-card p {
   font-size: 14px;
   line-height: 1.6;
 }
 
-.episode-card a {
+#episode-card a {
   color: #0066cc;
   text-decoration: none;
   font-size: 13px;
@@ -59,7 +59,7 @@ body {
   text-align: left;
 }
 
-.controls {
+#controls {
   display: flex;
   align-items: center;
   gap: 10px; 
@@ -70,8 +70,8 @@ body {
   z-index: 10;
 }
 
-.episodeSelect, 
-.episodeSearch {
+#episodeSelect, 
+#episodeSearch {
   padding: 6px 8px;
   font-size: 0.85rem;
   border-radius: 6px;
@@ -79,7 +79,7 @@ body {
   width: 300px; 
 }
 
-.episodeCount {
+#episodeCount {
   white-space: nowrap;
   
   
