@@ -1,8 +1,8 @@
 let currentEpisodes = [];
-let cachedShows = [];          // Cache for all shows
-let cachedEpisodes = {};       // Cache for episodes per show
+let cachedShows = [];
+let cachedEpisodes = {};
 
-document.addEventListener("DOMContentLoaded", setup); // Use DOMContentLoaded instead of window.onload
+document.addEventListener("DOMContentLoaded", setup);
 
 const rootElem = document.getElementById("root");
 const controls = document.getElementById("controls");
@@ -13,16 +13,15 @@ function formatEpisodeCode(episode) {
 
 async function setup() {
   try {
-    // Cache shows so they are only fetched once
     if (cachedShows.length === 0) {
       const res = await fetch("https://api.tvmaze.com/shows");
       if (!res.ok) throw new Error("Network error");
       cachedShows = await res.json();
       cachedShows.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
     }
-    showShowsListing(); // Start at shows listing page, not a default show
+    showShowsListing();
   } catch (err) {
-    rootElem.innerHTML = `<p class="error-message">Oops! Something went wrong loading shows.</p>`; // User-friendly error message
+    rootElem.innerHTML = `<p class="error-message">Oops! Something went wrong loading shows.</p>`;
     console.error(err);
   }
 }
@@ -31,29 +30,24 @@ function showShowsListing() {
   rootElem.innerHTML = "";
   controls.innerHTML = "";
 
-  // Search input for shows
   const searchInput = document.createElement("input");
   searchInput.id = "show-search";
   searchInput.placeholder = "Filtering for...";
   controls.appendChild(searchInput);
 
-  // Dropdown for quick selection of shows (hidden initially)
   const showSelect = document.createElement("select");
   showSelect.id = "show-select";
-  showSelect.style.display = "none";
+  showSelect.style.display = "none"; 
   showSelect.innerHTML = `<option value="" disabled selected>Select a show...</option>`;
   controls.appendChild(showSelect);
 
-  // Show count display
   const countDisplay = document.createElement("p");
   countDisplay.id = "show-count";
   controls.appendChild(countDisplay);
 
-  // Render all shows as cards initially
   renderShowCards(cachedShows);
   updateShowCount(cachedShows.length);
 
-  // Live show search with highlighting and genre/summary matching
   searchInput.addEventListener("input", () => {
     const query = searchInput.value.trim().toLowerCase();
     const filteredShows = cachedShows.filter(show =>
@@ -65,18 +59,16 @@ function showShowsListing() {
     renderShowCards(filteredShows, query);
     updateShowCount(filteredShows.length);
 
-    // Show dropdown only when searching
     if (query) {
       showSelect.style.display = "inline-block";
       populateShowDropdown(filteredShows, query);
-      showSelect.selectedIndex = 1; // NEW: Auto-select first match
+      showSelect.selectedIndex = 1;
     } else {
       showSelect.style.display = "none";
       clearShowDropdown();
     }
   });
 
-  // Keyboard navigation from search to dropdown
   searchInput.addEventListener("keydown", (e) => {
     if (e.key === "ArrowDown" && showSelect.style.display !== "none") {
       e.preventDefault();
@@ -84,7 +76,6 @@ function showShowsListing() {
     }
   });
 
-  // Selecting from dropdown loads episodes
   showSelect.addEventListener("change", () => {
     if (showSelect.value) {
       loadEpisodes(showSelect.value);
@@ -95,7 +86,6 @@ function showShowsListing() {
     countDisplay.textContent = `Found ${count}/${cachedShows.length} shows`;
   }
 
-  // Highlight search terms
   function highlightText(text, query) {
     if (!query) return text;
     const regex = new RegExp(`(${query})`, "gi");
@@ -114,26 +104,34 @@ function showShowsListing() {
     showSelect.innerHTML = `<option value="" disabled selected>Select a show...</option>`;
   }
 
-  // Show card layout with clickable titles
   function renderShowCards(shows, query = "") {
     rootElem.innerHTML = "";
     const fragment = document.createDocumentFragment();
+
+    const MAX_SUMMARY_LENGTH = 300; // Max characters for show description
+
     shows.forEach(show => {
       const card = document.createElement("section");
       card.classList.add("show-card");
+
+      let summaryText = show.summary ? show.summary.replace(/<[^>]+>/g, "") : "No summary available.";
+      if (summaryText.length > MAX_SUMMARY_LENGTH) {
+        summaryText = summaryText.slice(0, MAX_SUMMARY_LENGTH) + "…";
+      }
+
       card.innerHTML = `
         <h2 class="show-title" data-id="${show.id}" style="cursor:pointer">
           ${highlightText(show.name, query)}
         </h2>
         <img src="${show.image?.medium || "https://via.placeholder.com/210x295?text=No+Image"}" alt="${show.name}">
-        <div>${highlightText(show.summary || "No summary available.", query)}</div>
+        <div>${highlightText(summaryText, query)}</div>
         <p><strong>Genres:</strong> ${highlightText(show.genres.join(", "), query)}</p>
         <p><strong>Status:</strong> ${show.status}</p>
         <p><strong>Rating:</strong> ${show.rating?.average || "N/A"}</p>
         <p><strong>Runtime:</strong> ${show.runtime || "N/A"} mins</p>
       `;
       card.querySelector(".show-title").addEventListener("click", e =>
-        loadEpisodes(e.target.dataset.id) // Click title to load episodes
+        loadEpisodes(e.target.dataset.id)
       );
       fragment.appendChild(card);
     });
@@ -146,13 +144,11 @@ async function loadEpisodes(showId) {
     rootElem.innerHTML = "";
     controls.innerHTML = "";
 
-    // Back button to shows listing
     const backBtn = document.createElement("button");
     backBtn.textContent = "← Back to Shows";
     backBtn.addEventListener("click", showShowsListing);
     controls.appendChild(backBtn);
 
-    // Use cached episodes if available
     let episodes;
     if (cachedEpisodes[showId]) {
       episodes = cachedEpisodes[showId];
@@ -168,7 +164,7 @@ async function loadEpisodes(showId) {
     makePageForEpisodes(episodes);
     setupEpisodeControls(episodes);
   } catch (err) {
-    rootElem.innerHTML = `<p class="error-message">Oops! Something went wrong loading episodes.</p>`; // Friendly error message
+    rootElem.innerHTML = `<p class="error-message">Oops! Something went wrong loading episodes.</p>`;
     console.error(err);
   }
 }
@@ -180,8 +176,8 @@ function makePageForEpisodes(episodesList) {
   episodesList.forEach(episode => {
     const section = document.createElement("section");
     section.classList.add("episode-card");
-    section.dataset.name = episode.name.toLowerCase();       // Store lowercase name for search
-    section.dataset.summary = episode.summary?.toLowerCase() || ""; // Store lowercase summary for search
+    section.dataset.name = episode.name.toLowerCase();
+    section.dataset.summary = episode.summary?.toLowerCase() || "";
     section.id = formatEpisodeCode(episode);
 
     section.innerHTML = `
@@ -197,7 +193,6 @@ function makePageForEpisodes(episodesList) {
 }
 
 function setupEpisodeControls(episodes) {
-  // Dropdown to jump to episodes
   const episodeSelect = document.createElement("select");
   episodeSelect.id = "episode-select";
   episodeSelect.innerHTML = `<option value="" disabled selected>Jump to episode...</option>` +
@@ -206,12 +201,10 @@ function setupEpisodeControls(episodes) {
       return `<option value="${code}">${code} - ${ep.name}</option>`;
     }).join("");
 
-  // Search box for filtering episodes
   const searchInput = document.createElement("input");
   searchInput.id = "episode-search";
   searchInput.placeholder = "Search episodes...";
 
-  // Display count of visible episodes
   const countDisplay = document.createElement("p");
   countDisplay.id = "episode-count";
   countDisplay.textContent = `Displaying ${episodes.length}/${episodes.length} episodes`;
@@ -223,7 +216,6 @@ function setupEpisodeControls(episodes) {
     if (target) target.scrollIntoView({ behavior: "smooth" });
   });
 
-  // Real-time filtering for episodes
   searchInput.addEventListener("input", () => {
     const query = searchInput.value.trim().toLowerCase();
     let matches = 0;
